@@ -1,4 +1,4 @@
-##Crypto Coin Tracker
+## Crypto Coin Tracker
 
 My new project develop on Flutter, its a simple mobile app that currently only displays crypto coins and they respective data( image, name , symbol , price change).
 

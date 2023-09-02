@@ -1,4 +1,4 @@
-# myapp
+Crypto Coin Tracker
 
 A new Flutter project.
 

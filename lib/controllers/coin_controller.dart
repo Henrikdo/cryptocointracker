@@ -10,7 +10,12 @@ class CoinController extends GetxController {
   @override
   onInit(){
     super.onInit();
-    fetchCoins();
+    Future.doWhile(() async {
+      await Future.delayed(const Duration(seconds: 5));
+      fetchCoins();
+      return true;
+    });
+   
   }
 
 

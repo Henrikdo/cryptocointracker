@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/controllers/coin_controller.dart';
 import 'package:myapp/utils/utils.dart';
 import 'package:get/get.dart';
+import 'package:myapp/views/home/coin_screen.dart';
 //ignore_for_file: prefer_const_constructors
 
 class HomeScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff494F55),
+      backgroundColor: const Color.fromARGB(255, 31, 3, 36),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0,right: 20,top:50),
         child: SingleChildScrollView(
@@ -20,7 +21,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Crypto Market",
+                "Crypto Tracker",
                 style:textStyle(25, Colors.white, FontWeight.bold),
               ),
               Obx(
@@ -35,76 +36,107 @@ class HomeScreen extends StatelessWidget {
                   itemBuilder: (context,index) {
                     return Padding(
                       padding: const EdgeInsets.only(right: 20.0, top:30),
-                      child: Container(
-                    
-                        width: MediaQuery.of(context).size.width,
-                        height: 60,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      colors: const[
-                                      Color.fromARGB(255, 4, 255, 12),Color.fromARGB(255, 187, 255, 0)
-                                    ]),
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: const [BoxShadow(
-                                      color:  Color.fromARGB(255, 179, 255, 0),
-                                      offset: Offset(6, 6),
-                                      blurRadius: 5
-                                    )]
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Image.network(
-                                      controller.coinsList[index].image,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: (){
+                          var screen = CoinScreen(index: index);
+                          Navigator.of(context).push(_createRoute(screen));
+                        },
+                        child: Container(
+                                          
+                          width: MediaQuery.of(context).size.width,
+                          height: 60,
+                          
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: const[
+                                        Color.fromARGB(255, 4, 255, 12),Color.fromARGB(255, 187, 255, 0)
+                                      ]),
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: const [BoxShadow(
+                                        color:  Color.fromARGB(255, 179, 255, 0),
+                                        offset: Offset(6, 6),
+                                        blurRadius: 5
+                                      )]
                                     ),
-                                    
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Image.network(
+                                        controller.coinsList[index].image,
+                                      ),
+                                      
+                                    ),
                                   ),
+                                  const SizedBox(
+                                    width: 20
+                                  ),
+                                  Container(
+                                    width:MediaQuery.of(context).size.width*0.3,
+                              
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      
+                                      children: [
+                                        const SizedBox(
+                                          height: 8
+                                          
+                                          ),
+                                        Text(controller.coinsList[index].name,
+                                        style: textStyle(18, Colors.white, FontWeight.w600),
+                                        overflow: TextOverflow.fade,
+                                        softWrap: false,
+                                        maxLines: 1,
+                                        
+                                        ),
+                                        Text('${controller.coinsList[index].priceChangePercentage24H} %',
+                                        style: textStyle(18, Colors.grey, FontWeight.w600),
+                                        overflow: TextOverflow.fade,
+                                        softWrap: false,
+                                        maxLines: 1,
+                                        ),
+                                        
+                                      ],
+                                    ),
+                                  ),
+                                  ],
                                 ),
-                                const SizedBox(
-                                  width: 20
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     const SizedBox(
-                                      height: 8
-                                      ),
-                                    Text(controller.coinsList[index].name,
+                                          height: 8
+                                          ),
+                                    Text('\$${controller.coinsList[index].currentPrice}',
                                     style: textStyle(18, Colors.white, FontWeight.w600),
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                    maxLines: 1,
                                     ),
-                                    Text('${controller.coinsList[index].priceChangePercentage24H} %',
+                                    Text(controller.coinsList[index].symbol.toUpperCase(),
                                     style: textStyle(18, Colors.grey, FontWeight.w600),
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                    maxLines: 1,
                                     )
                                   ],
                                 ),
-                                ],
-                              ),
-                            
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                const SizedBox(
-                                      height: 8
-                                      ),
-                                Text('\$${controller.coinsList[index].currentPrice}',
-                                style: textStyle(18, Colors.white, FontWeight.w600),
-                                ),
-                                Text('${controller.coinsList[index].symbol}',
-                                style: textStyle(18, Colors.grey, FontWeight.w600),
-                                )
-                              ],
-                            )
-                          ],  
+                              )
+                            ],  
+                          ),
                         ),
                       ),
                     );
@@ -117,4 +149,22 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Route _createRoute(screen) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => screen,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

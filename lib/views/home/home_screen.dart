@@ -12,17 +12,23 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 31, 3, 36),
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(246, 115, 255, 0),
+        title: Center(child: Text('Crypto Tracker',style: textStyle(25,Colors.black,FontWeight.bold))),
+      ),
+      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.only(left: 20.0,right: 20,top:50),
+        padding: const EdgeInsets.only(left: 20.0,right: 20,top:20),
         child: SingleChildScrollView(
           physics: ScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Crypto Tracker",
-                style:textStyle(25, Colors.white, FontWeight.bold),
+              Center(
+                child: Text(
+                  "Scroll down!",
+                  style:textStyle(25, Colors.black, FontWeight.bold),
+                ),
               ),
               Obx(
                 ()=>  controller.isLoading.value
@@ -93,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                                           
                                           ),
                                         Text(controller.coinsList[index].name,
-                                        style: textStyle(18, Colors.white, FontWeight.w600),
+                                        style: textStyle(18, Colors.black, FontWeight.w600),
                                         overflow: TextOverflow.fade,
                                         softWrap: false,
                                         maxLines: 1,

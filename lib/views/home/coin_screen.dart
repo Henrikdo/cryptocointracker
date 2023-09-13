@@ -41,8 +41,8 @@ class _CoinScreenState extends State<CoinScreen> {
      double price = controller.coinsList[widget.index].currentPrice;
     return  Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text('Home',style: textStyle(18,Colors.white,FontWeight.bold)),
+        backgroundColor: Color.fromARGB(246, 115, 255, 0),
+        title: Text('Go Back',style: textStyle(18,Colors.black,FontWeight.bold)),
       ),
       backgroundColor:  Colors.white,
       body: Center(
@@ -106,7 +106,7 @@ class _CoinScreenState extends State<CoinScreen> {
                                   builder: (context) {
                                     return AlertDialog(
                                             title: Text("Warning!"),
-                                            content: Text("Email or Password is wrong!"),
+                                            content: Text("Can't update now!"),
                                               actions: [
                                               ElevatedButton(
                                                 onPressed: () {

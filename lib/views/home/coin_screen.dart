@@ -37,8 +37,12 @@ class _CoinScreenState extends State<CoinScreen> {
   @override
   Widget build(BuildContext context) {
     
+    double priceChange24H = controller.coinsList[widget.index].marketCapChangePercentage24H;
+    Color percentageColor = priceChange24H < 0 ?  Colors.red: const Color.fromARGB(255, 0, 255, 8);
+    double price = controller.coinsList[widget.index].currentPrice;
+
     
-     double price = controller.coinsList[widget.index].currentPrice;
+
     return  Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(246, 115, 255, 0),
@@ -51,8 +55,8 @@ class _CoinScreenState extends State<CoinScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Container(
-                width: MediaQuery.of(context).size.width*0.8,
-                height: MediaQuery.of(context).size.height*0.4,
+                width: MediaQuery.of(context).size.width*0.6,
+                height: MediaQuery.of(context).size.height*0.4 + 3.2,
                 
                 decoration:  BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -69,15 +73,22 @@ class _CoinScreenState extends State<CoinScreen> {
                   )]
             
                 ),
-                child: Column(
-                  
-                  children: [
-                    Image.network(
-                    controller.coinsList[widget.index].image),
-                    Text(controller.coinsList[widget.index].name,style: textStyle(45,Colors.white, FontWeight.w900),
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    
+                    children: [
+                      Image.network(
+                      controller.coinsList[widget.index].image),
+                      FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(controller.coinsList[widget.index].name,style: textStyle(45,Colors.white, FontWeight.w900),
+                        )
+                      ),
+                    ],
+                  ),
                 ),
+                
               ),
             ),
             Container(
@@ -85,47 +96,67 @@ class _CoinScreenState extends State<CoinScreen> {
               child: Padding(
                       padding: const EdgeInsets.all(40.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              
-                              Text('Price: \$ ${price}',
-                              style: textStyle(35, Colors.grey, FontWeight.w700)
-                              )
-                            ]
-                            
+                              Text('Price: ',
+                              style: textStyle(20, Colors.grey, FontWeight.w700)
+                              ),
+                              Text('US\$ ${price}',
+                              style: textStyle(20, Colors.black, FontWeight.w700)
+                              ),
+                            ],
                           ),
-                         
-                          Obx(
-                             () => controller.isLoading.value ? const Center(child:CircularProgressIndicator()): 
-                             OutlinedButton(
-                              onPressed: () {
-                                if(controller.inCooldown){
-                                  showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                            title: Text("Warning!"),
-                                            content: Text("Can't update now!"),
-                                              actions: [
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
+                          Row(
+                            children: [
+                              Text('Changed: ',
+                              style: textStyle(20, Colors.grey, FontWeight.w700)
+                              ),
+                              Text(priceChange24H> 0 ?'+${priceChange24H} %' :'${priceChange24H} %',
+                              style: textStyle(20, percentageColor, FontWeight.w700)
+                              ),
+                            ],
+                          ),
+                   
+                          Center(
+                            child: Obx(
+                               () => controller.isLoading.value ? const Center(child:CircularProgressIndicator()): 
+                               Padding(
+                                 padding: const EdgeInsets.only(top: 18.0),
+                                 child: OutlinedButton(
+                                  
+                                  onPressed: () {
+                                    if(controller.inCooldown){
+                                      showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                                title: Text("Error!"),
+                                                content: Text("an error with the api has ocurred!"),
+                                                  actions: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("OK"),
+                                                    ),
+                                                  ],
+                                                );
                                                 },
-                                                child: Text("OK"),
-                                                ),
-                                              ],
                                             );
-                                            },
-                                        );
-                                }else{
-                                  setState((){
-                                    controller.fetchCoins();
-                                    price = controller.coinsList[widget.index].currentPrice;
-                                  });
-                                }
-                              },
-                               child: Text('Update',style: textStyle(35, Colors.grey, FontWeight.w700),)
+                                    }else{
+                                      setState((){
+                                        controller.fetchCoins();
+                                        priceChange24H = controller.coinsList[widget.index].marketCapChangePercentage24H;
+                                        price = controller.coinsList[widget.index].currentPrice;
+                                      });
+                                    }
+                                  },
+                                   style: OutlinedButton.styleFrom( backgroundColor: Color.fromARGB(255, 21, 255, 0),),
+                                   child: Text('Reload',style: textStyle(28, Colors.white, FontWeight.w700),)
+                                                           ),
+                               ),
                             ),
                           )
                         ],
@@ -143,8 +174,5 @@ class _CoinScreenState extends State<CoinScreen> {
   }
 }
 
-int updateValues(int price, ){
-  int i = 0 ;
-  return i;
-}
+
 

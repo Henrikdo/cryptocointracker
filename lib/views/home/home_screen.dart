@@ -11,6 +11,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(246, 115, 255, 0),
@@ -40,6 +42,10 @@ class HomeScreen extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: controller.coinsList.length,
                   itemBuilder: (context,index) {
+                    
+                    double priceChange24H = controller.coinsList[index].marketCapChangePercentage24H;
+                    Color percentageColor = priceChange24H < 0 ?  Colors.red: const Color.fromARGB(255, 0, 255, 8);
+
                     return Padding(
                       padding: const EdgeInsets.only(right: 20.0, top:30),
                       child: InkWell(
@@ -105,8 +111,8 @@ class HomeScreen extends StatelessWidget {
                                         maxLines: 1,
                                         
                                         ),
-                                        Text('${controller.coinsList[index].priceChangePercentage24H} %',
-                                        style: textStyle(18, Colors.grey, FontWeight.w600),
+                                        Text(priceChange24H> 0 ?'+${priceChange24H} %' :'${priceChange24H} %',
+                                        style: textStyle(18, percentageColor, FontWeight.w600),
                                         overflow: TextOverflow.fade,
                                         softWrap: false,
                                         maxLines: 1,

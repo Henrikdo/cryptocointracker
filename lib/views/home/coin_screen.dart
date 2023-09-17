@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:myapp/utils/utils.dart';
 import 'package:async/async.dart';
 import 'package:myapp/utils/utils.dart' as utils;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 final CoinController controller = Get.put(CoinController());
 
 class CoinScreen extends StatefulWidget {
@@ -77,6 +78,9 @@ class _CoinScreenState extends State<CoinScreen> {
     return  Scaffold(
       appBar: AppBar(
         backgroundColor: utils.mainBlue,
+        leading: const BackButton( 
+          color: Colors.white,
+        ),
         title: Text('Go Back',style: textStyle(18,Colors.white,FontWeight.w300)),
       ),
       backgroundColor:  Colors.white,
@@ -196,11 +200,14 @@ class _CoinScreenState extends State<CoinScreen> {
               ),
               Center(
                               child: Obx(
-                                 () => controller.isLoading.value ? const Center(child:CircularProgressIndicator()): 
+                                 () => controller.isLoading.value ?  Center(child:SpinKitSpinningLines(
+                                  color: utils.lightBlue
+                                 )): 
                                  Padding(
                                    padding: const EdgeInsets.only(top: 18.0),
                                    child: OutlinedButton(
                                     style:  ButtonStyle(
+                                      
                                       backgroundColor: MaterialStatePropertyAll<Color>(utils.mainBlue),
                                     ),
                                     child: Text('Update',style: textStyle(18, Colors.white, FontWeight.w300),),

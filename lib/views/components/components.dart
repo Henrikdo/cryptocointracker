@@ -1,0 +1,1 @@
+export 'cripto_card.dart';

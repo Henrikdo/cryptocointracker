@@ -6,22 +6,25 @@ import'package:myapp/models/coin_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:developer' as developer;
 
+import 'package:myapp/repository/cripto_api.dart';
 
-class CoinService extends GetxService{
-  
+
+class CoinService {
+  final CriptoApi _api = CriptoApi();
  
   
-  fetchCoins(RxList<Coin> coinsList) async{
-  
+  Future<List<Coin>?> fetchCoins(String date) async{
 
     try{
-        var response = await http.get(
-        Uri.parse('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en'));
-        List<Coin> coins = coinFromJson(response.body);
-        coinsList.value = coins;
-      }catch (e){
+        var response = await _api.getCoins();
+        List<Coin> coins = coinFromJson(response.body); // converter de json para objeto
+        return coins;
+      } catch (e){
+        // TODO: tratamento de erros
         developer.log('error');
+        return null;
       }
+      // Utils.parseDate(date) <- String -> DateTime
   }
 }
   

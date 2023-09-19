@@ -8,4 +8,11 @@ My new project developed on Flutter, its a simple mobile app that currently only
 <img src="https://github.com/Henrikdo/cryptocointracker/assets/79461006/f08e38fa-99aa-4b7f-b329-d38ebe8d3f40" width="250" height="500" />
 
 
+- Refactor Telas
+- Refactor componentes
+- Refactor arquitetura/ API/ .env
+- Injeçao de dependencias
+- Roteamento de rotas
+- tratamento de erro
+
 

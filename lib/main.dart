@@ -1,8 +1,9 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:myapp/views/home/home_screen.dart';
-
+import 'package:get/get.dart';
+import 'package:myapp/controllers/coin_controller%20copy.dart';
+import 'package:myapp/views/home/home.dart';
 
 
 void main(List<String> args) {
@@ -14,9 +15,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( 
+    return GetMaterialApp( 
       debugShowCheckedModeBanner: false,
-      home:HomeScreen(),
+      home:RefactoredHomeScreen(),
     );
   }
 }

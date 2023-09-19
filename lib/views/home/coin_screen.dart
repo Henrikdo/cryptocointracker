@@ -12,8 +12,9 @@ final CoinController controller = Get.put(CoinController());
 
 class CoinScreen extends StatefulWidget {
   
-  int index = 0;
   CoinScreen({required this.index});
+  
+  final int index;
   
 
   @override

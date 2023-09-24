@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:myapp/controllers/coin_controller.dart';
 import 'package:myapp/utils/utils.dart';
@@ -11,38 +13,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 //ignore_for_file: prefer_const_constructors
 
-class HomeScreen extends StatefulWidget {
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
 
-class _HomeScreenState extends State<HomeScreen> {
-  final CoinController controller = Get.put(CoinController());
+  final controller = Get.put(CoinController());
 
   RxList<Coin> _foundcoins = <Coin>[].obs;
-
-  @override
-  void initState() {
-    _foundcoins = controller.coinsList;
-    super.initState();
-  }
-
-  void _runfilter(String enteredKeyword) {
-    RxList<Coin> results = <Coin>[].obs;
-    if (enteredKeyword.isEmpty) {
-      results = controller.coinsList;
-    } else {
-      results = controller.coinsList
-          .where((coin) =>
-              coin.name.toLowerCase().contains(enteredKeyword.toLowerCase()))
-          .toList()
-          .obs;
-    }
-
-    setState(() {
-      _foundcoins = results;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,194 +60,180 @@ class _HomeScreenState extends State<HomeScreen> {
         child: RefreshIndicator(
           onRefresh: refresh,
           child: SingleChildScrollView(
-            physics: ScrollPhysics(),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const SizedBox(height: 20),
-              TextField(
-                onChanged: (value) => _runfilter(value),
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Search',
-                    suffixIcon: Icon(Icons.search)),
-              ),
-              const SizedBox(height: 20),
-              Obx(
-                () => controller.isLoading.value
-                    ? Center(
-                        child: SpinKitSpinningLines(
-                        size: 40,
-                        color: utils.lightBlue,
-                      ))
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _foundcoins.length,
-                        itemBuilder: (context, index) {
-                          double priceChange24H =
-                              _foundcoins[index].marketCapChangePercentage24H;
-                          Color percentageColor =
-                              priceChange24H < 0 ? Colors.red : Colors.green;
-
-                          return Column(
-                            key: ValueKey(_foundcoins[index].id),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 20.0),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  onTap: () {
-                                    var screen = CoinScreen(index: index);
-                                    Navigator.of(context)
-                                        .push(_createRoute(screen));
-                                  },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 60,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 60,
-                                              height: 60,
-                                              decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                      begin:
-                                                          Alignment.centerLeft,
-                                                      end:
-                                                          Alignment.centerRight,
-                                                      colors: [
-                                                        utils.lightBlue,
-                                                        utils.mainBlue
-                                                      ]),
-                                                  color: Colors.grey,
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        color: utils.lightBlue,
-                                                        offset: Offset(2, 2),
-                                                        blurRadius: 5)
-                                                  ]),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                child: Image.network(
-                                                    _foundcoins[index].image,
-                                                    loadingBuilder: (BuildContext
-                                                            context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
-                                                  if (loadingProgress == null) {
-                                                    return child;
-                                                  }
-                                                  return Center(
-                                                    child: SpinKitSpinningLines(
-                                                      color: Colors.white,
-                                                    ),
-                                                  );
-                                                }),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 20),
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.3,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    _foundcoins[index].name,
-                                                    style: textStyle(
-                                                        18,
-                                                        Colors.black,
-                                                        FontWeight.w500),
-                                                    overflow: TextOverflow.fade,
-                                                    softWrap: false,
-                                                    maxLines: 1,
-                                                  ),
-                                                  Text(
-                                                    priceChange24H > 0
-                                                        ? '+${priceChange24H} %'
-                                                        : '${priceChange24H} %',
-                                                    style: textStyle(
-                                                        18,
-                                                        percentageColor,
-                                                        FontWeight.w300),
-                                                    overflow: TextOverflow.fade,
-                                                    softWrap: false,
-                                                    maxLines: 1,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.3,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              const SizedBox(height: 8),
-                                              Text(
-                                                '\$${_foundcoins[index].currentPrice}',
-                                                style: textStyle(
-                                                    18,
-                                                    Colors.black,
-                                                    FontWeight.w200),
-                                                overflow: TextOverflow.fade,
-                                                softWrap: false,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                _foundcoins[index]
-                                                    .symbol
-                                                    .toUpperCase(),
-                                                style: textStyle(
-                                                    18,
-                                                    Colors.grey,
-                                                    FontWeight.w600),
-                                                overflow: TextOverflow.fade,
-                                                softWrap: false,
-                                                maxLines: 1,
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Divider(
-                                  height: 25,
-                                  thickness: 1,
-                                  indent: 8,
-                                  endIndent: 10,
-                                  color: Colors.grey),
-                            ],
-                          );
-                        },
-                      ),
-              )
-            ]),
-          ),
+              physics: ScrollPhysics(),
+              child: Obx(() => controller.isLoading.value
+                  ? Center(
+                      child: SpinKitSpinningLines(
+                      size: 40,
+                      color: utils.lightBlue,
+                    ))
+                  : Column(
+                    children: [
+                      _searchBar(),
+                      _cryptoList(),
+                    ],
+                  ))),
         ),
       ),
     );
   }
+}
+
+Widget _searchBar() {
+  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    const SizedBox(height: 20),
+    TextField(
+      onChanged: (value) => controller.runfilter(value),
+      decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'Search',
+          suffixIcon: Icon(Icons.search)),
+    ),
+    const SizedBox(height: 20),
+  ]);
+}
+
+Widget _cryptoList() {
+  return Column(
+    children: [
+      ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: controller.filtro.length,
+        itemBuilder: (context, index) {
+          double priceChange24H =
+              controller.filtro[index].marketCapChangePercentage24H;
+          Color percentageColor =
+              priceChange24H < 0 ? Colors.red : Colors.green;
+
+          return Column(
+            key: ValueKey(controller.filtro[index].id),
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    var screen = CoinScreen(index: index);
+                    Navigator.of(context).push(_createRoute(screen));
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: [
+                                        utils.lightBlue,
+                                        utils.mainBlue
+                                      ]),
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: utils.lightBlue,
+                                        offset: Offset(2, 2),
+                                        blurRadius: 5)
+                                  ]),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Image.network(
+                                    controller.filtro[index].image,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return Center(
+                                    child: SpinKitSpinningLines(
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    controller.filtro[index].name,
+                                    style: textStyle(
+                                        18, Colors.black, FontWeight.w500),
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                    maxLines: 1,
+                                  ),
+                                  Text(
+                                    priceChange24H > 0
+                                        ? '+${priceChange24H} %'
+                                        : '${priceChange24H} %',
+                                    style: textStyle(
+                                        18, percentageColor, FontWeight.w300),
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const SizedBox(height: 8),
+                              Text(
+                                '\$${controller.filtro[index].currentPrice}',
+                                style: textStyle(
+                                    18, Colors.black, FontWeight.w200),
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                                maxLines: 1,
+                              ),
+                              Text(
+                                controller.filtro[index].symbol.toUpperCase(),
+                                style:
+                                    textStyle(18, Colors.grey, FontWeight.w600),
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                                maxLines: 1,
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Divider(
+                  height: 25,
+                  thickness: 1,
+                  indent: 8,
+                  endIndent: 10,
+                  color: Colors.grey),
+            ],
+          );
+        },
+      )
+    ],
+  );
 }
 
 Route _createRoute(screen) {

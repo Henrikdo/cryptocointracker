@@ -6,8 +6,10 @@ import 'dart:developer' as developer;
 
 class CoinController extends GetxController {
   CoinService coinService = Get.put(CoinService());
+  
   RxBool isLoading = true.obs;
   RxList<Coin> coinsList = <Coin>[].obs;
+  RxList<Coin> filtro = <Coin>[].obs;
   bool inCooldown = false;
 
   @override
@@ -17,20 +19,37 @@ class CoinController extends GetxController {
   }
 
   fetchCoins() async {
+    isLoading(true);
     try {
-      isLoading(true);
-      try {
-        var response = await http.get(Uri.parse(
-            'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en'));
-        List<Coin> coins = coinFromJson(response.body);
-        coinsList.value = coins;
-        inCooldown = false;
-      } catch (e) {
+      // controller faz a chamada
+      // o service acessa o banco de dados
+      // o repository busca o dado
+      var result = await coinService.fetchCoins();
+      if (result != null) {
+        coinsList.value = result;
+        filtro.value = result;
+      } else {
+        developer.log('error');
         inCooldown = true;
-        developer.log('error: api call limit reached, try again later');
       }
-    } finally {
-      isLoading(false);
+    } catch (e) {
+      developer.log(e.toString());
     }
+
+    isLoading(false);
+  }
+
+  void runfilter(String enteredKeyword) {
+    RxList<Coin> results = <Coin>[].obs;
+    if (enteredKeyword.isEmpty) {
+      results = coinsList;
+    } else {
+      results = coinsList
+          .where((coin) =>
+              coin.name.toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList()
+          .obs;
+    }
+    filtro.value = results;
   }
 }

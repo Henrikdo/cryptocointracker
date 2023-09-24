@@ -28,7 +28,7 @@ class CoinController2 extends GetxController {
       // controller faz a chamada
       // o service acessa o banco de dados
       // o repository busca o dado
-      var result = await coinService.fetchCoins('20/04/2000'); 
+      var result = await coinService.fetchCoins(); 
       if(result != null){
         coinsList.value = result;
         filtro.value = result;

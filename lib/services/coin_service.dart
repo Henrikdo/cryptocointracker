@@ -13,7 +13,7 @@ class CoinService {
   final CriptoApi _api = CriptoApi();
  
   
-  Future<List<Coin>?> fetchCoins(String date) async{
+  Future<List<Coin>?> fetchCoins() async{
 
     try{
         var response = await _api.getCoins();

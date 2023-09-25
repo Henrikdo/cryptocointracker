@@ -28,12 +28,13 @@ class CoinController extends GetxController {
       if (result != null) {
         coinsList.value = result;
         filtro.value = result;
+        
       } else {
-        developer.log('error');
         inCooldown = true;
       }
     } catch (e) {
       developer.log(e.toString());
+      return Future.error(e);
     }
 
     isLoading(false);
@@ -52,4 +53,12 @@ class CoinController extends GetxController {
     }
     filtro.value = results;
   }
+  Future refresh() async {
+      
+        developer.log('refreshing');
+        fetchCoins();
+      
+    }
+
+
 }

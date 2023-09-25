@@ -1,9 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:myapp/controllers/coin_controller.dart';
 import 'package:myapp/utils/utils.dart';
 import 'package:get/get.dart';
+import 'package:myapp/views/components/components.dart';
 import 'package:myapp/views/home/coin_screen.dart';
 import 'package:myapp/utils/utils.dart' as utils;
 import 'package:myapp/models/coin_model.dart';
@@ -17,8 +16,6 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final controller = Get.put(CoinController());
-
-  RxList<Coin> _foundcoins = <Coin>[].obs;
 
   @override
   Widget build(BuildContext context) {
@@ -48,192 +45,68 @@ class HomeScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: utils.mainBlue,
-        title: Center(
-            child: Text('Crypto Tracker',
-                style: textStyle(25, Colors.white, FontWeight.w400))),
-      ),
+      appBar: _appBar(),
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.only(left: 20.0, right: 20),
-        child: RefreshIndicator(
-          onRefresh: refresh,
-          child: SingleChildScrollView(
-              physics: ScrollPhysics(),
-              child: Obx(() => controller.isLoading.value
-                  ? Center(
-                      child: SpinKitSpinningLines(
-                      size: 40,
-                      color: utils.lightBlue,
-                    ))
-                  : Column(
-                    children: [
-                      _searchBar(),
-                      _cryptoList(),
-                    ],
-                  ))),
-        ),
-      ),
+          padding: const EdgeInsets.only(left: 20.0, right: 20),
+          child: Obx(() => controller.isLoading.value
+              ? ObxCircularProgression()
+              : Column(
+                  children: [_searchBar(), _cryptoList()],
+                ))),
     );
   }
-}
 
-Widget _searchBar() {
-  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    const SizedBox(height: 20),
-    TextField(
-      onChanged: (value) => controller.runfilter(value),
-      decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Search',
-          suffixIcon: Icon(Icons.search)),
-    ),
-    const SizedBox(height: 20),
-  ]);
-}
+  AppBar _appBar() {
+    return AppBar(
+      backgroundColor: utils.mainBlue,
+      title: Center(
+          child: Text('Crypto Tracker',
+              style: textStyle(25, Colors.white, FontWeight.w400))),
+    );
+  }
 
-Widget _cryptoList() {
-  return Column(
-    children: [
-      ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: controller.filtro.length,
-        itemBuilder: (context, index) {
-          double priceChange24H =
-              controller.filtro[index].marketCapChangePercentage24H;
-          Color percentageColor =
-              priceChange24H < 0 ? Colors.red : Colors.green;
+  Widget _searchBar() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const SizedBox(height: 20),
+      TextField(
+        onChanged: (value) => controller.runfilter(value),
+        decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Search',
+            suffixIcon: Icon(Icons.search)),
+      ),
+      const SizedBox(height: 20),
+    ]);
+  }
 
-          return Column(
-            key: ValueKey(controller.filtro[index].id),
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () {
-                    var screen = CoinScreen(index: index);
-                    Navigator.of(context).push(_createRoute(screen));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 60,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      colors: [
-                                        utils.lightBlue,
-                                        utils.mainBlue
-                                      ]),
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: utils.lightBlue,
-                                        offset: Offset(2, 2),
-                                        blurRadius: 5)
-                                  ]),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Image.network(
-                                    controller.filtro[index].image,
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  }
-                                  return Center(
-                                    child: SpinKitSpinningLines(
-                                      color: Colors.white,
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    controller.filtro[index].name,
-                                    style: textStyle(
-                                        18, Colors.black, FontWeight.w500),
-                                    overflow: TextOverflow.fade,
-                                    softWrap: false,
-                                    maxLines: 1,
-                                  ),
-                                  Text(
-                                    priceChange24H > 0
-                                        ? '+${priceChange24H} %'
-                                        : '${priceChange24H} %',
-                                    style: textStyle(
-                                        18, percentageColor, FontWeight.w300),
-                                    overflow: TextOverflow.fade,
-                                    softWrap: false,
-                                    maxLines: 1,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+  Widget _cryptoList() {
+    var lista = controller.filtro.value;
+    return Expanded(
+        child: RefreshIndicator(
+          onRefresh: controller.fetchCoins(),
+          child: ListView.builder(
+              shrinkWrap: true,
+              physics: AlwaysScrollableScrollPhysics(),
+              itemCount: controller.filtro.length,
+              itemBuilder: (context, index) {
+                return CriptoCard(
+                    titulo: lista[index].name,
+                    cotacao: lista[index].priceChange24H,
+                    simbolo: lista[index].symbol,
+                    valor: lista[index].currentPrice,
+                    context: context,
+                    onTap: ()=>{
+                      Navigator.of(context).push(
+                      _createRoute(
+                        CoinScreen(index: index),
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              const SizedBox(height: 8),
-                              Text(
-                                '\$${controller.filtro[index].currentPrice}',
-                                style: textStyle(
-                                    18, Colors.black, FontWeight.w200),
-                                overflow: TextOverflow.fade,
-                                softWrap: false,
-                                maxLines: 1,
-                              ),
-                              Text(
-                                controller.filtro[index].symbol.toUpperCase(),
-                                style:
-                                    textStyle(18, Colors.grey, FontWeight.w600),
-                                overflow: TextOverflow.fade,
-                                softWrap: false,
-                                maxLines: 1,
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const Divider(
-                  height: 25,
-                  thickness: 1,
-                  indent: 8,
-                  endIndent: 10,
-                  color: Colors.grey),
-            ],
-          );
-        },
-      )
-    ],
-  );
+                      )
+                    },
+                    image: lista[index].image);
+              }),
+        ));
+  }
 }
 
 Route _createRoute(screen) {

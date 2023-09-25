@@ -21,8 +21,8 @@ class CoinService {
         return coins;
       } catch (e){
         // TODO: tratamento de erros
-        developer.log('error');
-        return null;
+        
+        developer.log('erro');
       }
       // Utils.parseDate(date) <- String -> DateTime
   }

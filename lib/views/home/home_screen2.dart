@@ -55,11 +55,13 @@ class RefactoredHomeScreen extends StatelessWidget {
                   simbolo: lista[index].symbol,
                   titulo: lista[index].name,
                   valor: lista[index].currentPrice,
+                  context: context,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => CoinScreen(index: index),
                     ),
                   ),
+                  image: lista[index].image,
                   // controller.setCripto(lista[index])
                 );
               },

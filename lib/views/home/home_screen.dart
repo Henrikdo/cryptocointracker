@@ -4,11 +4,7 @@ import 'package:myapp/utils/utils.dart';
 import 'package:get/get.dart';
 import 'package:myapp/views/components/components.dart';
 import 'package:myapp/views/home/coin_screen.dart';
-import 'package:myapp/utils/utils.dart';
-import 'package:myapp/models/coin_model.dart';
-import 'dart:developer' as developer;
-import 'package:http/http.dart' as http;
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 //ignore_for_file: prefer_const_constructors
 
@@ -66,7 +62,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _cryptoList() {
-    var lista = controller.filtro.value;
+    var lista = controller.filtro;
     return Expanded(
         child: RefreshIndicator(
       onRefresh: controller.refresh,

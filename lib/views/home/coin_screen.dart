@@ -1,11 +1,10 @@
-import 'dart:math';
-import 'dart:developer' as developer;
+
+//import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
-import 'package:myapp/models/coin_model.dart';
+
 import 'package:myapp/controllers/coin_controller.dart';
 import 'package:get/get.dart';
 import 'package:myapp/utils/utils.dart';
-import 'package:async/async.dart';
 import 'package:myapp/utils/utils.dart' as utils;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 

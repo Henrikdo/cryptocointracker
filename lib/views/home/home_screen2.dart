@@ -38,7 +38,7 @@ class RefactoredHomeScreen extends StatelessWidget {
   }
 
   Widget _criptoList() {
-    var lista = controller.filtro.value;
+    var lista = controller.filtro;
     return controller.isLoading.value
         ? Center(
             child: SpinKitSpinningLines(

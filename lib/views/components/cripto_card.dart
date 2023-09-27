@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/views/components/circular_progression.dart';
-import 'package:myapp/views/home/coin_screen.dart';
+
 
 import '../../utils/utils.dart';
 

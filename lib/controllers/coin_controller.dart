@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:myapp/models/coin_model.dart';
-import 'package:http/http.dart' as http;
 import 'package:myapp/services/coin_service.dart';
 import 'dart:developer' as developer;
 import 'package:myapp/utils/utils.dart';

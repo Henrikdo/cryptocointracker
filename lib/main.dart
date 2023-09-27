@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myapp/controllers/coin_controller%20copy.dart';
 import 'package:myapp/views/home/home.dart';
 
 

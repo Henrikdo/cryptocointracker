@@ -3,14 +3,14 @@ import 'package:myapp/models/coin_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/services/coin_service.dart';
 import 'dart:developer' as developer;
-
+import 'package:myapp/utils/utils.dart';
 class CoinController extends GetxController {
   CoinService coinService = Get.put(CoinService());
-  
+
   RxBool isLoading = true.obs;
   RxList<Coin> coinsList = <Coin>[].obs;
   RxList<Coin> filtro = <Coin>[].obs;
-  bool inCooldown = false;
+  final status = Status.loading.obs;
 
   @override
   onInit() {
@@ -19,7 +19,7 @@ class CoinController extends GetxController {
   }
 
   fetchCoins() async {
-    isLoading(true);
+    status.value = Status.loading;
     try {
       // controller faz a chamada
       // o service acessa o banco de dados
@@ -28,16 +28,16 @@ class CoinController extends GetxController {
       if (result != null) {
         coinsList.value = result;
         filtro.value = result;
-        
+        status.value = Status.sucess;
       } else {
-        inCooldown = true;
+        status.value = Status.error;
       }
     } catch (e) {
       developer.log(e.toString());
-      return Future.error(e);
+      status.value = Status.error;
     }
 
-    isLoading(false);
+    //status.value = Status.sucess;
   }
 
   void runfilter(String enteredKeyword) {
@@ -53,12 +53,15 @@ class CoinController extends GetxController {
     }
     filtro.value = results;
   }
+
+  
   Future refresh() async {
-      
-        developer.log('refreshing');
-        fetchCoins();
-      
-    }
+    developer.log('refreshing : $status' );
+    fetchCoins();
+  }
 
-
+  Future <void> showDialog(context,alert) async {
+     showDialog(context, alert);
+  }
+  
 }

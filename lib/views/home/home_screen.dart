@@ -4,7 +4,7 @@ import 'package:myapp/utils/utils.dart';
 import 'package:get/get.dart';
 import 'package:myapp/views/components/components.dart';
 import 'package:myapp/views/home/coin_screen.dart';
-import 'package:myapp/utils/utils.dart' as utils;
+import 'package:myapp/utils/utils.dart';
 import 'package:myapp/models/coin_model.dart';
 import 'dart:developer' as developer;
 import 'package:http/http.dart' as http;
@@ -19,47 +19,19 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future refresh() async {
-      if (controller.inCooldown) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text("Error!"),
-              content: Text("an error has ocurred!"),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        developer.log('refreshing');
-        controller.fetchCoins();
-      }
-    }
-
     return Scaffold(
-      appBar: _appBar(),
-      backgroundColor: Colors.white,
-      body: Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20),
-          child: Obx(() => controller.isLoading.value
-              ? ObxCircularProgression()
-              : Column(
-                  children: [_searchBar(), _cryptoList()],
-                ))),
-    );
+        appBar: _appBar(),
+        backgroundColor: Colors.white,
+        body: Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 20),
+            child: Column(
+              children: [_searchBar(), _cryptoListObserver(context)],
+            )));
   }
 
   AppBar _appBar() {
     return AppBar(
-      backgroundColor: utils.mainBlue,
+      backgroundColor: mainBlue,
       title: Center(
           child: Text('Crypto Tracker',
               style: textStyle(25, Colors.white, FontWeight.w400))),
@@ -80,32 +52,60 @@ class HomeScreen extends StatelessWidget {
     ]);
   }
 
+  Widget _cryptoListObserver(context) {
+    return Obx(() {
+      if (controller.status.value == Status.loading) {
+        return ObxCircularProgression();
+      }else if (controller.status.value == Status.error) {
+        Future.delayed(Duration.zero, () {
+          showDialog(context: context, builder: _alert);
+        });
+      }
+      return _cryptoList();
+    });
+  }
+
   Widget _cryptoList() {
     var lista = controller.filtro.value;
     return Expanded(
         child: RefreshIndicator(
-          onRefresh: controller.fetchCoins(),
-          child: ListView.builder(
-              shrinkWrap: true,
-              physics: AlwaysScrollableScrollPhysics(),
-              itemCount: controller.filtro.length,
-              itemBuilder: (context, index) {
-                return CriptoCard(
-                    titulo: lista[index].name,
-                    cotacao: lista[index].priceChange24H,
-                    simbolo: lista[index].symbol,
-                    valor: lista[index].currentPrice,
-                    context: context,
-                    onTap: ()=>{
+      onRefresh: controller.refresh,
+      child: ListView.builder(
+          shrinkWrap: true,
+          physics: AlwaysScrollableScrollPhysics(),
+          itemCount: controller.filtro.length,
+          itemBuilder: (context, index) {
+            return CriptoCard(
+                titulo: lista[index].name,
+                cotacao: lista[index].priceChange24H,
+                simbolo: lista[index].symbol,
+                valor: lista[index].currentPrice,
+                context: context,
+                onTap: () => {
                       Navigator.of(context).push(
-                      _createRoute(
-                        CoinScreen(index: index),
+                        _createRoute(
+                          CoinScreen(index: index),
                         ),
                       )
                     },
-                    image: lista[index].image);
-              }),
-        ));
+                image: lista[index].image);
+          }),
+    ));
+  }
+
+  AlertDialog _alert(context) {
+    return AlertDialog(
+      title: Text("Error!"),
+      content: Text("Plase try updating later"),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("OK"),
+        ),
+      ],
+    );
   }
 }
 

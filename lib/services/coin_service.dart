@@ -17,12 +17,16 @@ class CoinService {
 
     try{
         var response = await _api.getCoins();
-        List<Coin> coins = coinFromJson(response.body); // converter de json para objeto
-        return coins;
+        List<Coin> coins = coinFromJson(response.body);
+        if(response.statusCode == 200){
+          return coins;
+        } 
+        throw 'Erro';
       } catch (e){
         // TODO: tratamento de erros
         
-        developer.log('erro');
+        
+        return Future.error(e);
       }
       // Utils.parseDate(date) <- String -> DateTime
   }

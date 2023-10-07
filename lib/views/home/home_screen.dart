@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
         body: Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Column(
-              children: [_searchBar(), _cryptoListObserver(context)],
+              children: [_searchBar(), _cryptoListBuilder(context)],
             )));
   }
 
@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
     ]);
   }
 
-  Widget _cryptoListObserver(context) {
+  Widget _cryptoListBuilder(context) {
     return Obx(() {
       if (controller.status.value == Status.loading) {
         return ObxCircularProgression();

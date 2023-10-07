@@ -100,7 +100,7 @@ class CriptoCard extends StatelessWidget {
             maxLines: 1,
           ),
           Text(
-            cotacao > 0 ? '+$cotacao %' : '$cotacao %',
+            cotacao > 0 ? '+${cotacao.toStringAsFixed(4)} %' : '${cotacao.toStringAsFixed(4)} %',
             style: textStyle(
                 18, cotacao > 0 ? Colors.green : Colors.red, FontWeight.w300),
             overflow: TextOverflow.fade,

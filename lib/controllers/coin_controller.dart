@@ -3,18 +3,34 @@ import 'package:myapp/models/coin_model.dart';
 import 'package:myapp/services/coin_service.dart';
 import 'dart:developer' as developer;
 import 'package:myapp/utils/utils.dart';
+
 class CoinController extends GetxController {
   CoinService coinService = Get.put(CoinService());
 
   RxBool isLoading = true.obs;
   RxList<Coin> coinsList = <Coin>[].obs;
   RxList<Coin> filtro = <Coin>[].obs;
+  //RxList<Coin> coin = <Coin>[].obs;
   final status = Status.loading.obs;
 
   @override
   onInit() {
     super.onInit();
     fetchCoins();
+  }
+
+  fetchCoin(String id) async {
+    try {
+      // controller faz a chamada
+      // o service acessa o banco de dados
+      // o repository busca o dado
+      var result = await coinService.fetchCoin(id);
+
+      return result;
+    } catch (e) {
+      developer.log(e.toString());
+      status.value = Status.error;
+    }
   }
 
   fetchCoins() async {
@@ -53,14 +69,12 @@ class CoinController extends GetxController {
     filtro.value = results;
   }
 
-  
   Future refresh() async {
-    developer.log('refreshing : $status' );
+    developer.log('refreshing : $status');
     fetchCoins();
   }
 
-  Future <void> showDialog(context,alert) async {
-     showDialog(context, alert);
+  Future<void> showDialog(context, alert) async {
+    showDialog(context, alert);
   }
-  
 }

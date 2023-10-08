@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/controllers/coin_controller%20copy.dart';
 import 'package:myapp/views/home/home.dart';
 
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp( 
       debugShowCheckedModeBanner: false,
-      home:HomeScreen(),
+      home:RefactoredHomeScreen(),
     );
   }
 }

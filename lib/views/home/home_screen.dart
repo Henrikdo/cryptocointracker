@@ -77,10 +77,11 @@ class HomeScreen extends StatelessWidget {
                 simbolo: lista[index].symbol,
                 valor: lista[index].currentPrice,
                 context: context,
-                onTap: () => {
-                      Navigator.of(context).push(
+                onTap:  () => {
+                       Navigator.of(context).push(
                         _createRoute(
-                          CoinScreen(index: index),
+                          
+                          CoinScreen(coin:  lista[index]),
                         ),
                       )
                     },

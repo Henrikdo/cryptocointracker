@@ -20,12 +20,12 @@ class CoinService implements CoinServiceInterface {
   }
 
   @override
-  Future<List<Coin>?> fetchCoin(String id) async {
+  Future<Coin?> fetchCoin(String id) async {
     try {
       var response = await _api.getCoin(id);
       List<Coin> coins = coinFromJson(response.body);
       if (response.statusCode == 200) {
-        return coins;
+        return coins[0];
       }
       throw Error();
     } catch (e) {

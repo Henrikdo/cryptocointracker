@@ -10,7 +10,7 @@ class CoinController extends GetxController {
   RxBool isLoading = true.obs;
   RxList<Coin> coinsList = <Coin>[].obs;
   RxList<Coin> filtro = <Coin>[].obs;
-  //RxList<Coin> coin = <Coin>[].obs;
+  
   final status = Status.loading.obs;
 
   @override
@@ -20,17 +20,19 @@ class CoinController extends GetxController {
   }
 
   fetchCoin(String id) async {
+    status.value = Status.loading;
     try {
       // controller faz a chamada
       // o service acessa o banco de dados
       // o repository busca o dado
       var result = await coinService.fetchCoin(id);
-
+      status.value = Status.sucess;
       return result;
     } catch (e) {
       developer.log(e.toString());
       status.value = Status.error;
     }
+    status.value = Status.error;
   }
 
   fetchCoins() async {

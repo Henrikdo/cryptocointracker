@@ -1,17 +1,14 @@
 import 'package:get/get.dart';
 import 'package:myapp/models/coin_model.dart';
+import 'package:http/http.dart' as http;
 import 'package:myapp/services/coin_service.dart';
 import 'dart:developer' as developer;
-import 'package:myapp/utils/utils.dart';
 
 class CoinController extends GetxController {
   CoinService coinService = Get.put(CoinService());
-
   RxBool isLoading = true.obs;
   RxList<Coin> coinsList = <Coin>[].obs;
-  RxList<Coin> filtro = <Coin>[].obs;
-  
-  final status = Status.loading.obs;
+  bool inCooldown = false;
 
   @override
   onInit() {
@@ -19,64 +16,21 @@ class CoinController extends GetxController {
     fetchCoins();
   }
 
-  fetchCoin(String id) async {
-    status.value = Status.loading;
-    try {
-      // controller faz a chamada
-      // o service acessa o banco de dados
-      // o repository busca o dado
-      var result = await coinService.fetchCoin(id);
-      status.value = Status.sucess;
-      return result;
-    } catch (e) {
-      developer.log(e.toString());
-      status.value = Status.error;
-    }
-    status.value = Status.error;
-  }
-
   fetchCoins() async {
-    status.value = Status.loading;
     try {
-      // controller faz a chamada
-      // o service acessa o banco de dados
-      // o repository busca o dado
-      var result = await coinService.fetchCoins();
-      if (result != null) {
-        coinsList.value = result;
-        filtro.value = result;
-        status.value = Status.sucess;
-      } else {
-        status.value = Status.error;
+      isLoading(true);
+      try {
+        var response = await http.get(Uri.parse(
+            'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en'));
+        List<Coin> coins = coinFromJson(response.body);
+        coinsList.value = coins;
+        inCooldown = false;
+      } catch (e) {
+        inCooldown = true;
+        developer.log('error: api call limit reached, try again later');
       }
-    } catch (e) {
-      developer.log(e.toString());
-      status.value = Status.error;
+    } finally {
+      isLoading(false);
     }
-
-    //status.value = Status.sucess;
-  }
-
-  void runfilter(String enteredKeyword) {
-    RxList<Coin> results = <Coin>[].obs;
-    if (enteredKeyword.isEmpty) {
-      results = coinsList;
-    } else {
-      results = coinsList
-          .where((coin) =>
-              coin.name.toLowerCase().contains(enteredKeyword.toLowerCase()))
-          .toList()
-          .obs;
-    }
-    filtro.value = results;
-  }
-
-  Future refresh() async {
-    developer.log('refreshing : $status');
-    fetchCoins();
-  }
-
-  Future<void> showDialog(context, alert) async {
-    showDialog(context, alert);
   }
 }

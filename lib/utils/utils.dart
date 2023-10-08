@@ -14,6 +14,12 @@ TextStyle textStyle(double size, Color color, FontWeight fw) {
   return GoogleFonts.montserrat(fontSize: size, color: color, fontWeight: fw);
 }
 
+
+enum Status{
+  sucess,
+  loading,
+  error
+}
 // DateTime parseDate(String date) {
 //   dates = date.split('/');
 //   day = dates[0]

@@ -1,32 +1,35 @@
-
-import 'dart:convert';
 import 'package:myapp/models/coin_model.dart';
-import 'package:get/get.dart';
-import'package:myapp/models/coin_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:developer' as developer;
-
 import 'package:myapp/repository/cripto_api.dart';
+import 'package:myapp/services/coin_service_interface.dart';
 
-
-class CoinService {
+class CoinService implements CoinServiceInterface {
   final CriptoApi _api = CriptoApi();
- 
-  
-  Future<List<Coin>?> fetchCoins(String date) async{
 
-    try{
-        var response = await _api.getCoins();
-        List<Coin> coins = coinFromJson(response.body); // converter de json para objeto
+  @override
+  Future<List<Coin>?> fetchCoins() async {
+    try {
+      var response = await _api.getCoins();
+      List<Coin> coins = coinFromJson(response.body);
+      if (response.statusCode == 200) {
         return coins;
-      } catch (e){
-        // TODO: tratamento de erros
-        developer.log('error');
-        return null;
       }
-      // Utils.parseDate(date) <- String -> DateTime
+      throw Error();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Coin?> fetchCoin(String id) async {
+    try {
+      var response = await _api.getCoin(id);
+      List<Coin> coins = coinFromJson(response.body);
+      if (response.statusCode == 200) {
+        return coins[0];
+      }
+      throw Error();
+    } catch (e) {
+      rethrow;
+    }
   }
 }
-  
-
-

@@ -24,15 +24,8 @@ class CoinService {
         developer.log('error');
         return null;
       }
-
-      throw Error();
-    } catch (e) {
-      rethrow;
-    }
-  }
       // Utils.parseDate(date) <- String -> DateTime
   }
-
 }
   
 

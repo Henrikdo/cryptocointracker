@@ -19,21 +19,6 @@ class CoinController extends GetxController {
     fetchCoins();
   }
 
-  fetchCoin(String id) async {
-    status.value = Status.loading;
-    try {
-      // controller faz a chamada
-      // o service acessa o banco de dados
-      // o repository busca o dado
-      var result = await coinService.fetchCoin(id);
-      status.value = Status.sucess;
-      return result;
-    } catch (e) {
-      developer.log(e.toString());
-      status.value = Status.error;
-    }
-    status.value = Status.error;
-  }
 
   fetchCoins() async {
     status.value = Status.loading;

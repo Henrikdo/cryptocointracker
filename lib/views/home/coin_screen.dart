@@ -91,7 +91,7 @@ class CoinScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _imageBox(context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),

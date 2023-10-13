@@ -2,67 +2,64 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/controllers/coin_controller.dart';
 import 'package:get/get.dart';
+import 'package:myapp/models/coin_model.dart';
 import 'package:myapp/utils/utils.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:myapp/views/components/coin_info_column.dart';
 
 final CoinController controller = Get.put(CoinController());
 
-
 class CoinScreen extends StatelessWidget {
-  CoinScreen({required this.index});
+  const CoinScreen({
+    required this.coin,
+    super.key,
+  });
 
-  final int index;
-  
-
+  final Coin coin;
 
   @override
   Widget build(BuildContext context) {
-    var coin = controller.fetchCoin(controller.filtro[index].id);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: mainBlue,
-        leading: const BackButton(
-          color: Colors.white,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: mainBlue,
+          leading: const BackButton(
+            color: Colors.white,
+          ),
+          title: Text('Go Back',
+              style: textStyle(18, Colors.white, FontWeight.w300)),
         ),
-        title: Text('Go Back',
-            style: textStyle(18, Colors.white, FontWeight.w300)),
-      ),
-      body: Center(
-        child: Obx(
-                () => controller.status.value == Status.loading
-                    ? Center(child: SpinKitSpinningLines(color: lightBlue))
-                    :Column(
-          children: [
-            
-            _imageBox(context,coin),
-            _infoColumns(coin),
-            Center(
-              child: Padding(
-                        padding: const EdgeInsets.only(top: 18.0),
-                        child: OutlinedButton(
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll<Color>(mainBlue),
-                          ),
-                          child: Text(
-                            'Update',
-                            style: textStyle(18, Colors.white, FontWeight.w300),
-                          ),
-                          onPressed: () {
-                            coin = controller.fetchCoin(controller.filtro[index].id);
-                          },
-                        )),
-              ),
-          ],
-        ),
-      ),
-    ));
+        body: Center(
+          child: Obx(() => controller.status.value == Status.loading
+              ? Center(child: SpinKitSpinningLines(color: lightBlue))
+              : Column(children: [
+                  _imageBox(context),
+                  _infoColumns(),
+                  _updateButton()
+                ])),
+        ));
   }
 
-  Widget _infoColumns(coin) {
+  Widget _updateButton() {
+    return Center(
+      child: Padding(
+          padding: const EdgeInsets.only(top: 18.0),
+          child: OutlinedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll<Color>(mainBlue),
+            ),
+            child: Text(
+              'Update',
+              style: textStyle(18, Colors.white, FontWeight.w300),
+            ),
+            onPressed: () {
+              controller.refresh();
+            },
+          )),
+    );
+  }
 
+  Widget _infoColumns() {
     return Padding(
       padding: const EdgeInsets.all(40.0),
       child: Container(
@@ -95,7 +92,7 @@ class CoinScreen extends StatelessWidget {
     );
   }
 
-  Widget _imageBox(context,coin) {
+  Widget _imageBox(context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: Container(

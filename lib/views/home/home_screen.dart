@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:myapp/views/components/components.dart';
 import 'package:myapp/views/home/coin_screen.dart';
 
-
 //ignore_for_file: prefer_const_constructors
 
 class HomeScreen extends StatelessWidget {
@@ -52,7 +51,7 @@ class HomeScreen extends StatelessWidget {
     return Obx(() {
       if (controller.status.value == Status.loading) {
         return ObxCircularProgression();
-      }else if (controller.status.value == Status.error) {
+      } else if (controller.status.value == Status.error) {
         Future.delayed(Duration.zero, () {
           showDialog(context: context, builder: _alert);
         });
@@ -80,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                 onTap: () => {
                       Navigator.of(context).push(
                         _createRoute(
-                          CoinScreen(index: index),
+                          CoinScreen(coin: lista[index]),
                         ),
                       )
                     },

@@ -3,9 +3,11 @@
 Developed on Flutter, its a simple mobile app that currently  displays crypto coins and they respective data.
 
 
-<img src="https://github.com/Henrikdo/cryptocointracker/assets/79461006/260d2d6f-7c8a-4cc2-b60f-c1a85ba58ae7" width="250" height="500" />
-<img src="https://github.com/Henrikdo/cryptocointracker/assets/79461006/aa7f911d-f17e-48b8-9644-10411bebd777" width="250" height="500" />
-<img src="https://github.com/Henrikdo/cryptocointracker/assets/79461006/f08e38fa-99aa-4b7f-b329-d38ebe8d3f40" width="250" height="500" />
+<img src="https://github.com/Henrikdo/cryptocointracker/assets/79461006/1205e6e4-d1d9-484d-9292-dc075b45db17" width="250" height="500" />
+<img src="https://github.com/Henrikdo/cryptocointracker/assets/79461006/f6b83a1c-3092-4ce4-8685-a43963295183" width="250" height="500" />
+<img src="https://github.com/Henrikdo/cryptocointracker/assets/79461006/66b7068d-677b-499f-aa59-6d88fa7310e4" width="250" height="500" />
+
+
 
 
 - Refactor Telas
